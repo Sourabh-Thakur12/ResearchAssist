@@ -1,7 +1,7 @@
 import json
 from typing import List, Dict
-from adk.tools.search_tool import SearchTool  # Assuming SearchTool is implemented
-from adk.tools.browser_tool import BrowserTool  # Assuming BrowserTool is implemented
+# from adk.tools.search_tool import SearchTool  # Assuming SearchTool is implemented
+# from adk.tools.browser_tool import BrowserTool  # Assuming BrowserTool is implemented
 
 class RetrieverAgent:
     """
@@ -27,23 +27,23 @@ class RetrieverAgent:
             return json.dumps({"error": "Invalid JSON input from QueryParserAgent"})
 
         boolean_queries = query_data.get("boolean_search_queries", [])
-        
+
         if not boolean_queries:
             # Fallback or error if no search queries are provided
             return json.dumps({"error": "No boolean search queries found in input."})
 
         # 1. Perform Search using the primary/first boolean query
         # In a real ADK system, you might run all or prioritize based on logic
-        primary_query = boolean_queries[0] 
+        primary_query = boolean_queries[0]
         print(f"Retriever: Searching for: {primary_query}")
-        
+
         search_results: List[Dict] = self.search_tool.search(
-            query=primary_query, 
+            query=primary_query,
             limit=self.max_search_results
         )
 
         retrieved_documents: List[Dict] = []
-        
+
         # 2. Iterate through search results and browse/scrape the content
         for i, result in enumerate(search_results):
             url = result.get("url")
@@ -58,17 +58,17 @@ class RetrieverAgent:
             print(f"Retriever: Browsing document {i+1}/{len(search_results)}: {title}")
             try:
                 # Use the browser tool to get the raw content of the webpage
-                raw_content = self.browser_tool.scrape(url) 
-                
+                raw_content = self.browser_tool.scrape(url)
+
                 # Append the full document structure
                 retrieved_documents.append({
                     "title": title,
                     "url": url,
                     "snippet": snippet,
                     # Raw content goes to DocProcessorAgent
-                    "raw_extracted_content": raw_content, 
+                    "raw_extracted_content": raw_content,
                     # Score can be inherited from search engine or set as 1.0 initially
-                    "relevance_score": result.get("score", 1.0) 
+                    "relevance_score": result.get("score", 1.0)
                 })
             except Exception as e:
                 print(f"Retriever: Error scraping {url}: {e}")

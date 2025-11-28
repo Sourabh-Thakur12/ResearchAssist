@@ -1,11 +1,11 @@
 import json
 from typing import List, Dict
 import re
-from adk.tools.pdf_processor import PDFProcessor # Assuming this tool exists
+# from adk.tools.pdf_processor import PDFProcessor # Assuming this tool exists
 
 class DocProcessorAgent:
     """
-    Processes raw content: removes boilerplate, extracts main body, 
+    Processes raw content: removes boilerplate, extracts main body,
     sections text, and chunks text for structured parsing.
     """
 
@@ -15,19 +15,19 @@ class DocProcessorAgent:
 
     def _remove_boilerplate(self, html_content: str) -> str:
         """
-        A simple, heuristic-based function to strip common HTML tags and boilerplate.
+        A simple, heuristic based function to strip common HTML tags and boilerplate.
         A production system would use libraries like BeautifulSoup or trafilatura.
         """
         # 1. Remove script and style tags
         cleaned_text = re.sub(r'<script\b[^>]*>.*?</script>', '', html_content, flags=re.IGNORECASE | re.DOTALL)
         cleaned_text = re.sub(r'<style\b[^>]*>.*?</style>', '', cleaned_text, flags=re.IGNORECASE | re.DOTALL)
-        
+
         # 2. Extract visible text (a very crude method, needs improvement for production)
         text_only = re.sub(r'<[^>]+>', ' ', cleaned_text).strip()
-        
+
         # 3. Simplify whitespace
         text_only = re.sub(r'\s+', ' ', text_only).strip()
-        
+
         return text_only
 
     def _section_and_chunk_text(self, text: str, max_chunk_size: int = 1024) -> List[Dict]:
@@ -36,13 +36,13 @@ class DocProcessorAgent:
         and then chunks them into smaller parts for LLM processing.
         """
         sections = []
-        
+
         # A simple heuristic: split by double newline to get paragraphs/sections
         paragraphs = text.split('\n\n')
-        
+
         current_chunk = ""
         current_section = "Main Body" # Default section name
-        
+
         for p in paragraphs:
             # Simple header detection (e.g., all caps, short line)
             if len(p.split()) < 10 and p.isupper():
@@ -66,7 +66,7 @@ class DocProcessorAgent:
                 "section_title": current_section,
                 "text_chunk": current_chunk.strip()
             })
-            
+
         return sections
 
     def run(self, retriever_output_json: str) -> str:
@@ -84,11 +84,11 @@ class DocProcessorAgent:
             return json.dumps({"error": "Invalid JSON input from RetrieverAgent"})
 
         processed_documents: List[Dict] = []
-        
+
         for doc in documents:
             raw_content = doc.get("raw_extracted_content", "")
             url = doc.get("url", "N/A")
-            
+
             print(f"DocProcessor: Processing document: {doc.get('title')}")
 
             if not raw_content:
@@ -122,7 +122,7 @@ class DocProcessorAgent:
             "core_question": core_question,
             "processed_documents": processed_documents
         }
-        
+
         return json.dumps(output_json, indent=2)
 
 
