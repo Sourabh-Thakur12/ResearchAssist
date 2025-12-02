@@ -62,14 +62,11 @@ class Orchestrator:
         return final_answer
 
 
-# ---------------------------------------------------------
-# YES — YOU MUST INSTANTIATE THE CLASS HERE!!!
-# ---------------------------------------------------------
 if __name__ == "__main__":
 
     user_q = input("\nEnter your research question: ")
 
-    orch = Orchestrator()              # ← YOU FORGOT THIS EARLIER
+    orch = Orchestrator()
     final_output = asyncio.run(orch.run(user_q))
 
     print("\n=== FINAL ANSWER ===\n")

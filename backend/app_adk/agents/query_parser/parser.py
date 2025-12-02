@@ -27,7 +27,7 @@ parser_agent = LlmAgent(
 
 
 # ---------------------------------------------------------
-# ASYNC RUNNER — NOW TAKES USER QUESTION
+# ASYNC RUNNER
 # ---------------------------------------------------------
 async def runner(user_question: str) -> str:
     """

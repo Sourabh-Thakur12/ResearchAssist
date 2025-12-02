@@ -15,7 +15,6 @@ class PDFProcessor:
         """
         print(f"MOCK PDFProcessor: Extracting text from PDF data/URL.")
 
-        # If a real extraction was done, it would return clean text.
         return (
             "PDF DOCUMENT: CONTRADICTION DETECTION\n"
             "1. Introduction\n"
