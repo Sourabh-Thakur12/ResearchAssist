@@ -1,42 +1,41 @@
+import requests
+from bs4 import BeautifulSoup
+from readability import Document
+
 class BrowserTool:
     """
-    MOCK TOOL: Simulates fetching and scraping the raw HTML content of a URL.
-    In a real system, this would use a library like requests + BeautifulSoup/Trafilatura.
+    Lightweight browser tool for retrieving and cleaning webpage content.
+    Ideal for research use cases (blogs, articles, documentation).
     """
-    def __init__(self):
-        print("BrowserTool initialized.")
+
+    def __init__(self, timeout=10):
+        self.timeout = timeout
+        self.headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (X11; Linux x86_64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/120.0 Safari/537.36"
+            )
+        }
 
     def scrape(self, url: str) -> str:
-        """
-        Fetches and returns the raw content of a given URL.
+        """Fetch the page and extract clean readable text."""
+        try:
+            # 1. download raw page
+            response = requests.get(url, headers=self.headers, timeout=self.timeout)
+            response.raise_for_status()
 
-        :param url: The URL to scrape.
-        :return: The raw content (mock HTML/text).
-        """
-        print(f"MOCK BrowserTool: Attempting to scrape {url}")
+            html = response.text
 
-        if "loops-paper" in url:
-            return (
-                "<html><body><header>Logo and Nav Bar</header>"
-                "<h1>The Power of Reflection Loops</h1>"
-                "<p>Introduction: Reflection is the core mechanism enabling self-correction in a multi-agent system. "
-                "The **LoopManagerAgent** controls the reflection, deciding whether to re-run the **RetrieverAgent** "
-                "or the **PaperReaderAgent**.</p>"
-                "<h2>Results: Accuracy Metrics</h2>"
-                "<p>We observed a mean accuracy gain of $A=0.35$ using three reflection cycles.</p>"
-                "<footer>Contact us at info@mock-science.com</footer></body></html>"
-            )
-        elif "adk-blog" in url:
-            return (
-                "<html><body><h1>ADK Workflows</h1><p>The ADK orchestrator uses a JSON graph to define the agent flow: "
-                "QueryParser -> Retriever -> DocProcessor. This ensures deterministic and modular execution.</p>"
-                "<footer>End of article.</footer></body></html>"
-            )
-        elif "pitfalls" in url:
-            return (
-                "<html><body><article><h1>Common Pitfalls</h1><p>A major pitfall is handling **boilerplate text**. "
-                "The **DocProcessorAgent** must aggressively clean the raw content to prevent extraction errors downstream.</p>"
-                "</article></body></html>"
-            )
-        else:
-            return ""
+            # 2. Use readability to isolate main article content
+            readable_doc = Document(html)
+            summary_html = readable_doc.summary()
+
+            # 3. Parse into clean text
+            soup = BeautifulSoup(summary_html, "lxml")
+            text = soup.get_text(separator="\n", strip=True)
+
+            return text
+
+        except Exception as e:
+            return f"[BrowserTool Error] Failed to scrape {url}: {e}"

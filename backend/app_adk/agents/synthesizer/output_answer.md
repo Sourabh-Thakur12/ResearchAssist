@@ -1,0 +1,48 @@
+### **Answer: The fundamental principles and various physical phenomena associated with the bending of light.**
+
+- Glossary Published: 26 April 2012 Updated: 23 May 2020
+- Bend Dating is a psychology-informed, evidence-based, community-rooted alternative with independent oversight designed to ensure safety, members’ well-being, and support creation of authentic relationships
+- Unlike the swipe-based apps built on algorithms and gimmicks, Bend Dating is rooted in community, best practices, and has independent oversight by a non-profit research institute
+- Evidence-Based & Professionally Supported Grounded in Best Practices: Screening and membership policies rooted in professional standards of psychology and relationship science
+- Third-Party Oversight: Independent monitoring by a non-profit research institute guarantees transparency, accountability, and ongoing evaluation of outcomes
+- Empirical and Evidence-Based Standards: Bend Dating practices and policies are grounded in data, not dating fads or untested theories
+- [BrowserTool Error] Failed to scrape https://crowcanyon.org/education/learn-about-archaeology/archaeological-dating/: HTTPSConnectionPool(host='crowcanyon.org', port=443): Read timed out.
+- Process of determining an age on a specified chronology in archaeology and geology Absolute dating is the process of determining an age on a specified chronology in archaeology and geology
+- In archaeology, absolute dating is usually based on the physical, chemical, and life properties of the materials of artifacts, buildings, or other items that have been modified by humans and by historical associations with materials with known dates (such as coins and historical records )
+- For example, coins found in excavations may have their production date written on them, or there may be written records describing the coin and when it was used, allowing the site to be associated with a particular calendar year
+- [ 3 ] In historical geology , the primary methods of absolute dating involve using the radioactive decay of elements trapped in rocks or minerals, including isotope systems from younger organic remains (radiocarbon dating with 14 C ) to systems such as uranium–lead dating that allow determination of absolute ages for some of the oldest rocks on Earth
+- For example, techniques based on isotopes with half-lives in the thousands of years, such as carbon-14, cannot be used to date materials that have ages on the order of billions of years, as the detectable amounts of the radioactive atoms and their decayed daughter isotopes will be too small to measure within the uncertainty of the instruments
+- Bending Archaeology toward Social Justice: Transformational Action for Positive Peace Book Barbara J
+- Little 2023 summary Introduces an analytic model for how archaeologists can work toward social justice In this time of Black Lives Matter, the demands of NAGPRA, and climate crises, the field of American archaeology needs a radical transformation
+- In Bending Archaeology toward Social Justice , Barbara J
+- Little explores the concepts and actions required for such a change, looking to peace studies, anthropology, sociology, social justice activism, and the achievements of community-based archaeology for helpful approaches in keeping with the UN Sustainable Development Goals
+- She introduces an analytic model that uses the strengths of archaeology to destabilize violence and build peace
+- [BrowserTool Error] Failed to scrape https://hns-conference.com/2024/08/12/authenticity-and-bending-history-2/: 403 Client Error: Forbidden for url: https://hns-conference.com/2024/08/12/authenticity-and-bending-history-2/
+- Method in the social sciences Comparative historical research is a method of social science that examines historical events in order to create explanations that are valid beyond a particular time and place, either by direct comparison to other historical events, theory building, or reference to the present day
+- While the disciplines of history and sociology have always been connected, they have connected in different ways at different times
+- This form of research may use any of several theoretical orientations
+- Some commentators have identified three waves of historical comparative research
+- [ 3 ] The first wave of historical comparative research concerned how societies came to be modern , i.e
+- Historical research involves carefully studying and analyzing past events and data to better understand how the past impacts the present
+- It relies on primary sources like documents, artifacts, and oral histories, as well as secondary sources
+- The research process involves collecting data, critically analyzing its authenticity and reliability, and then synthesizing the validated information to establish facts and test hypotheses
+- Some areas of historical study include specific time periods, geographical locations, and topics like military history
+- A variety of methods and tools are used, such as corroborating evidence, photography, revisionism, change logs, and examining human and social evolution.
+- by Ian Milligan ISBN: 9780773556966 Publication Date: 2019-03-28 Believe it or not, the 1990s are history
+- As historians turn to study this period and beyond, they will encounter a historical record that is radically different from what has ever existed before
+- Ian Milligan argues that web-based historical sources and their archives present extraordinary opportunities as well as daunting technical and ethical challenges for historians
+- Through case studies, he outlines the approaches, methods, tools, and search functions that can help a historian turn web documents into historical sources
+- He also considers the implications of the size and scale of digital sources, which amount to more information than historians have ever had at their fingertips, and many of which are by and about people who have traditionally been absent from the historical record
+- [BrowserTool Error] Failed to scrape https://www.hbs.edu/faculty/Shared%20Documents/conferences/strategy-science-2021/80_Pillai%20et%20al%202021%20-%20History.pdf: All strings must be XML compatible: Unicode or ASCII, no NULL bytes or control characters
+
+### **Sources Used**
+- Refraction of light → https://www.sciencelearn.org.nz/resources/49-refraction-of-light
+- The Bend Dating Difference → https://www.mentorresearch.org/the-bend-dating-difference
+- Archaeological Dating → https://crowcanyon.org/education/learn-about-archaeology/archaeological-dating/
+- Absolute dating → https://en.wikipedia.org/wiki/Absolute_dating
+- Bending Archaeology toward Social Justice - Project MUSE → https://muse.jhu.edu/book/123735
+- Authenticity and Bending History → https://hns-conference.com/2024/08/12/authenticity-and-bending-history-2/
+- Comparative historical research → https://en.wikipedia.org/wiki/Comparative_historical_research
+- Historical research design | PPTX → https://www.slideshare.net/slideshow/historical-research-design/74255672
+- Module 4: Historical Methods → https://libguides.nwmissouri.edu/c.php?g=1414155&p=10475644
+- Using historical methods to improve abduction and ... → https://www.hbs.edu/faculty/Shared%20Documents/conferences/strategy-science-2021/80_Pillai%20et%20al%202021%20-%20History.pdf

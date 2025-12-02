@@ -1,155 +1,119 @@
 import json
-from typing import List, Dict
 import re
-# from adk.tools.pdf_processor import PDFProcessor # Assuming this tool exists
+from bs4 import BeautifulSoup
+
 
 class DocProcessorAgent:
-    """
-    Processes raw content: removes boilerplate, extracts main body,
-    sections text, and chunks text for structured parsing.
-    """
 
     def __init__(self):
-        # Initialize any necessary components (e.g., text segmentation model)
-        self.pdf_processor = PDFProcessor() # For handling PDF content in future
+        print("[DocProcessor] Initialized")
 
-    def _remove_boilerplate(self, html_content: str) -> str:
-        """
-        A simple, heuristic based function to strip common HTML tags and boilerplate.
-        A production system would use libraries like BeautifulSoup or trafilatura.
-        """
-        # 1. Remove script and style tags
-        cleaned_text = re.sub(r'<script\b[^>]*>.*?</script>', '', html_content, flags=re.IGNORECASE | re.DOTALL)
-        cleaned_text = re.sub(r'<style\b[^>]*>.*?</style>', '', cleaned_text, flags=re.IGNORECASE | re.DOTALL)
+    # -----------------------------
+    # Clean HTML → plain text
+    # -----------------------------
+    def clean_html(self, html: str) -> str:
+        print("[DocProcessor] Cleaning HTML...")
 
-        # 2. Extract visible text (a very crude method, needs improvement for production)
-        text_only = re.sub(r'<[^>]+>', ' ', cleaned_text).strip()
+        soup = BeautifulSoup(html, "html.parser")
 
-        # 3. Simplify whitespace
-        text_only = re.sub(r'\s+', ' ', text_only).strip()
+        # Remove unwanted tags
+        for tag in soup(["script", "style", "noscript"]):
+            tag.extract()
 
-        return text_only
+        # Remove navigation/footer/sidebar
+        for selector in [
+            "header", "footer", "nav", "aside",
+            "[class*=header]", "[class*=nav]", "[class*=footer]",
+            "[id*=header]", "[id*=nav]", "[id*=footer]"
+        ]:
+            for t in soup.select(selector):
+                t.extract()
 
-    def _section_and_chunk_text(self, text: str, max_chunk_size: int = 1024) -> List[Dict]:
-        """
-        Segments the cleaned text into logical sections (heuristically based on headers)
-        and then chunks them into smaller parts for LLM processing.
-        """
-        sections = []
+        text = soup.get_text(separator=" ", strip=True)
+        text = re.sub(r"\s+", " ", text)
 
-        # A simple heuristic: split by double newline to get paragraphs/sections
-        paragraphs = text.split('\n\n')
+        print(f"[DocProcessor] Cleaned HTML length: {len(text)} characters")
+        return text
 
-        current_chunk = ""
-        current_section = "Main Body" # Default section name
+    # -----------------------------
+    # Summarize text
+    # -----------------------------
+    def summarize(self, text: str) -> str:
+        print("[DocProcessor] Summarizing...")
+        if not text:
+            return ""
 
-        for p in paragraphs:
-            # Simple header detection (e.g., all caps, short line)
-            if len(p.split()) < 10 and p.isupper():
-                current_section = p.strip()
-                continue
+        sentences = re.split(r'(?<=[.!?]) +', text)
+        return " ".join(sentences[:2])
 
-            # Check if adding the current paragraph exceeds the chunk size
-            if len(current_chunk) + len(p) + 1 > max_chunk_size:
-                if current_chunk:
-                    sections.append({
-                        "section_title": current_section,
-                        "text_chunk": current_chunk.strip()
-                    })
-                current_chunk = p
-            else:
-                current_chunk += " " + p
+    # -----------------------------
+    # Relevance score
+    # -----------------------------
+    def compute_relevance(self, text: str, keywords: list) -> float:
+        print("[DocProcessor] Scoring relevance...")
+        text_lower = text.lower()
+        matches = sum(1 for k in keywords if k.lower() in text_lower)
+        score = min(1.0, matches / max(1, len(keywords)) + 0.2)
+        print(f"[DocProcessor] Score = {score}")
+        return score
 
-        # Add the last chunk
-        if current_chunk:
-            sections.append({
-                "section_title": current_section,
-                "text_chunk": current_chunk.strip()
-            })
+    # -----------------------------
+    # MAIN PROCESSOR
+    # -----------------------------
+    def run(self, retriever_json: str) -> str:
+        print("\n[DocProcessor] Running...")
+        print(f"[DocProcessor] Incoming JSON size: {len(retriever_json)} bytes")
 
-        return sections
-
-    def run(self, retriever_output_json: str) -> str:
-        """
-        Executes the document processing logic on the raw documents.
-
-        :param retriever_output_json: JSON string from RetrieverAgent.
-        :return: JSON string containing processed documents with text chunks.
-        """
         try:
-            input_data = json.loads(retriever_output_json)
-            documents: List[Dict] = input_data.get("documents", [])
-            core_question = input_data.get("core_question")
-        except json.JSONDecodeError:
-            return json.dumps({"error": "Invalid JSON input from RetrieverAgent"})
+            data = json.loads(retriever_json)
+        except Exception as e:
+            print("[DocProcessor] ERROR: cannot parse retriever JSON!", e)
+            return json.dumps({"error": "Invalid JSON"}, indent=2)
 
-        processed_documents: List[Dict] = []
+        documents = data.get("documents", [])
+        print(f"[DocProcessor] Documents found: {len(documents)}")
 
-        for doc in documents:
-            raw_content = doc.get("raw_extracted_content", "")
-            url = doc.get("url", "N/A")
+        core_question = data.get("core_question", "")
+        keywords = re.findall(r"\w+", core_question)
 
-            print(f"DocProcessor: Processing document: {doc.get('title')}")
+        processed_docs = []
 
-            if not raw_content:
-                print(f"DocProcessor: Skipping document with no raw content: {url}")
+        for i, doc in enumerate(documents):
+            print(f"\n[DocProcessor] Processing document #{i+1}")
+
+            raw = doc.get("raw_extracted_content")
+
+            # Debug raw type
+            print(f"[DocProcessor] raw_extracted_content type: {type(raw)}")
+
+            # Skip list results (search result lists)
+            if isinstance(raw, list):
+                print("[DocProcessor] Skipping because raw content is a LIST (search results).")
                 continue
 
-            # 1. Remove Boilerplate (if it's not a PDF)
-            if not url.lower().endswith('.pdf'):
-                cleaned_text = self._remove_boilerplate(raw_content)
-            else:
-                # Placeholder for PDF handling
-                cleaned_text = self.pdf_processor.extract_text(raw_content)
-
-            if not cleaned_text:
-                print(f"DocProcessor: Content extraction failed for: {url}")
+            if not isinstance(raw, str):
+                print("[DocProcessor] Skipping because raw content is not string!")
                 continue
 
-            # 2. Section and Chunk Text
-            text_chunks = self._section_and_chunk_text(cleaned_text)
+            cleaned_text = self.clean_html(raw)
+            summary = self.summarize(cleaned_text)
+            score = self.compute_relevance(cleaned_text, keywords)
 
-            # 3. Create the final processed document object
-            processed_documents.append({
-                "source_url": url,
-                "source_title": doc.get("title"),
-                "relevance_score": doc.get("relevance_score"),
-                "processed_chunks": text_chunks
+            processed_docs.append({
+                "title": doc.get("title", "Untitled"),
+                "url": doc.get("url"),
+                "cleaned_content": cleaned_text,
+                "summary": summary,
+                "relevance_score": score
             })
 
-        # Output structure must strictly adhere to the contract for PaperReaderAgent
-        output_json = {
+        output = {
             "core_question": core_question,
-            "processed_documents": processed_documents
+            "documents": processed_docs
         }
 
-        return json.dumps(output_json, indent=2)
+        final_json = json.dumps(output, indent=2)
+        print("\n[DocProcessor] Final JSON size:", len(final_json), "bytes")
+        print("[DocProcessor] DONE.\n")
 
-
-# --- Mock Implementations for adk/tools/ ---
-class PDFProcessor:
-    def extract_text(self, raw_data: str) -> str:
-        # Mock for PDF text extraction
-        return "This is a mock text from a PDF. It is clean and ready to be chunked."
-
-
-# Example of how to run the agent:
-if __name__ == '__main__':
-    # Mock input from RetrieverAgent
-    mock_retriever_output = json.dumps({
-        "core_question": "What are the latest findings in multi-agent system reflection?",
-        "documents": [
-            {
-                "title": "Agent Reflection Mechanisms",
-                "url": "http://example.com/agent-reflection",
-                "snippet": "Mechanisms for self-correction.",
-                "raw_extracted_content": "<html><body><header>Logo</header><h1>Agent Reflection Mechanisms</h1><p>Introduction: Reflection is key to multi-agent accuracy.</p><h2>METHODOLOGY</h2><p>We used iterative prompting with a CriticAgent. The result was <b>90% accuracy</b> improvement. This is a significant claim.</p><footer>Copyright 2024</footer></body></html>",
-                "relevance_score": 0.95
-            }
-        ]
-    })
-
-    doc_processor = DocProcessorAgent()
-    output = doc_processor.run(mock_retriever_output)
-    print("\n--- DocProcessorAgent Output ---")
-    print(output)
+        return final_json

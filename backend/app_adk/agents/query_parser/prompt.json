@@ -1,0 +1,46 @@
+{
+    "core_question": "The fundamental principles and various physical phenomena associated with the bending of light.",
+    "sub_questions": [
+        "What are the primary physical mechanisms that cause light to bend (e.g., refraction, diffraction, reflection)?",
+        "How do the wave theory and particle theory of light explain these bending phenomena?",
+        "What is Snell's Law and how does it quantify light refraction?",
+        "What is gravitational lensing, and how does general relativity explain the bending of light by massive objects?",
+        "What are some common practical applications of light bending in technology or nature?"
+    ],
+    "keywords": [
+        "bending of light",
+        "light refraction",
+        "light diffraction",
+        "light reflection",
+        "gravitational lensing",
+        "Snell's Law",
+        "wave optics",
+        "photon deflection",
+        "general relativity light bending",
+        "principles of optics"
+    ],
+    "boolean_queries": [
+        "\"bending of light\" AND (refraction OR diffraction OR reflection)",
+        "\"gravitational lensing\" AND \"light bending\" AND \"general relativity\"",
+        "\"Snell's Law\" AND \"refraction\" AND principles",
+        "\"wave optics\" AND \"light deflection\" AND phenomena",
+        "\"applications of light bending\" OR \"optical phenomena\""
+    ],
+    "scope": {
+        "time_range": "unspecified",
+        "domain": "physics, optics, astrophysics",
+        "depth": "intermediate"
+    },
+    "expected_outputs": [
+        "summary",
+        "principles",
+        "explanations",
+        "examples",
+        "applications"
+    ],
+    "ambiguities_or_missing_info": [
+        "User did not specify the particular phenomenon of light bending (e.g., refraction, diffraction, gravitational lensing).",
+        "User did not specify the context (e.g., theoretical physics, practical applications, astrophysics).",
+        "User did not specify the desired level of detail or academic depth."
+    ]
+}
